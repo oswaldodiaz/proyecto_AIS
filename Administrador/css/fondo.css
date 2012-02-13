@@ -1,0 +1,22 @@
+/* CSS Document */
+@charset "utf-8";
+body {
+        /*padding-left: 11em;*/
+        font-family: Georgia, "Arial", serif;
+        color: white;
+		background-color: #006699;
+		 
+      }
+tr {
+	
+	background-color: #ffffff;
+	
+	}
+#draggable { width: 250px; 
+			height: 100px; 
+			padding: 0.5em; 
+			background-color: #ffffff
+			}
+
+
+
