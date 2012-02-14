@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 14-02-2012 a las 05:33:25
+-- Tiempo de generación: 14-02-2012 a las 15:58:12
 -- Versión del servidor: 5.5.16
 -- Versión de PHP: 5.3.8
 
@@ -42,14 +42,16 @@ CREATE TABLE IF NOT EXISTS `cita` (
   PRIMARY KEY (`id`),
   KEY `index_cita_on_paciente_id` (`paciente_id`),
   KEY `index_cita_on_medico_id` (`medico_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=12 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=14 ;
 
 --
 -- Volcado de datos para la tabla `cita`
 --
 
 INSERT INTO `cita` (`id`, `paciente_id`, `medico_id`, `tipo_paciente`, `frecuentacion_inst`, `frecuentacion_serv`, `tipo_atencion`, `atencion_por`, `area_referencia`, `fecha`, `turno`, `informe_medico`) VALUES
-(11, 18539330, 0, 'Asegurado', 'De Primera Vez', 'De primera vez', 'Nuevo', 'Control', 'Consulta Externa', NULL, NULL, NULL);
+(11, 18539330, 3444, 'Asegurado', 'De Primera Vez', 'De primera vez', 'Nuevo', 'Control', 'Consulta Externa', '2012-02-15', 'Mañana', NULL),
+(12, 18539330, 3444, 'Asegurado', 'Subsiguiente', 'Subsiguiente', 'Re consulta', 'Control', 'Consulta Externa', '2012-02-22', 'Mañana', NULL),
+(13, 8466948, 2974, 'No Asegurado', 'De Primera Vez', 'De primera vez', 'Nuevo', 'Control', 'SEGURO INTERIOR', '2012-02-16', 'Mañana', NULL);
 
 -- --------------------------------------------------------
 
@@ -75,38 +77,6 @@ INSERT INTO `historia_medicas` (`numero_expediente`, `informe`, `paciente_id`, `
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `medicos`
---
-
-CREATE TABLE IF NOT EXISTS `medicos` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `codigo_medico` int(11) NOT NULL,
-  `primer_nombre` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `segundo_nombre` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `primer_apellido` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `segundo_apellido` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `sexo` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `telefono` int(11) DEFAULT NULL,
-  `direccion` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `servicio_id` int(11) DEFAULT NULL,
-  `clave` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `rol` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `tipo_profesional` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `codigo_profesional` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `index_medicos_on_servicio_id` (`servicio_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=19023501 ;
-
---
--- Volcado de datos para la tabla `medicos`
---
-
-INSERT INTO `medicos` (`id`, `codigo_medico`, `primer_nombre`, `segundo_nombre`, `primer_apellido`, `segundo_apellido`, `sexo`, `telefono`, `direccion`, `servicio_id`, `clave`, `rol`, `tipo_profesional`, `codigo_profesional`) VALUES
-(19023500, 220, 'Leonardo', 'Alberto', 'Da Silva', 'Perez', 'Masculino', 412234235, 'Altamira', 1234, 'leonardo', 'Medico', 'internista', 231);
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `pacientes`
 --
 
@@ -117,9 +87,9 @@ CREATE TABLE IF NOT EXISTS `pacientes` (
   `primer_apellido` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `segundo_apellido` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `sexo` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `telefono` int(11) DEFAULT NULL,
+  `telefono` bigint(15) DEFAULT NULL,
   `direccion` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `numero_historia` int(11) DEFAULT NULL,
+  `numero_historia` bigint(15) DEFAULT NULL,
   `fecha_nacimiento` date DEFAULT NULL,
   `lugar_nacimiento` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `nombre_padre` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -130,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `pacientes` (
   `corregimiento` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `nombre_urgencias` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `parentesco_urgencias` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `telefono_urgencias` int(11) DEFAULT NULL,
+  `telefono_urgencias` bigint(15) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_pacientes_on_historia_medica_id` (`numero_historia`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -140,12 +110,9 @@ CREATE TABLE IF NOT EXISTS `pacientes` (
 --
 
 INSERT INTO `pacientes` (`id`, `primer_nombre`, `segundo_nombre`, `primer_apellido`, `segundo_apellido`, `sexo`, `telefono`, `direccion`, `numero_historia`, `fecha_nacimiento`, `lugar_nacimiento`, `nombre_padre`, `nombre_madre`, `seguro_social`, `provincia`, `distrito`, `corregimiento`, `nombre_urgencias`, `parentesco_urgencias`, `telefono_urgencias`) VALUES
-(1, 'Oswaldo  ', 'Andres  ', 'Diaz', 'Bolivar', 'Masculino', 113124, 'Av...', 1, '0000-00-00', 'Caracas', 'WTF', 'Piru', 'No', 'Miranda', 'Carrizal', 'Carrizal', 'Miguel', 'allegado', 0),
-(123, ' ', ' ', '', '', '', 0, '', 12341, '0000-00-00', '', '', '', '', '', '', '', '', '', 0),
-(8466948, 'Dilia', 'Coromoto', 'Cones', 'Carvo', 'Femenino', 2147483647, 'Las Villas', 2, '1962-07-20', 'c', 'Alcibiades', 'Corina', 'Si', 'Carrizal', 'Miranda', 'Venezuela', 'Dilia', 'Madre', 2147483647),
-(18539330, 'Oswaldo', 'Andres', 'Diaz', 'Cones', 'Femenino', 2147483647, 'Las Villas', 1, '1989-11-25', 'Cantaura', 'Oswaldo', 'Dilia', 'Si', 'Carrizal', 'Miranda', 'Venezuela', 'Coromoto', 'Madre', 2147483647),
-(19209051, 'Manuela', 'Ela', 'VIllavicencio', 'Bolivar', 'Femenino', 2147483647, 'Caracas', 2147483647, '0000-00-00', 'Caracas', 'cualquier', 'vaina', 'No', 'Caracas', 'Caracas', 'Caracas', 'Leonardo', 'allegado', 604032142),
-(20546378, 'Pedro ', 'Pablo ', 'Perez', 'Jimenez', 'Masculino', 2147483647, 'Caracas', 123124, '1999-02-02', 'Caracas', 'Pedro', 'Palomina', 'Si', 'Caracas', 'Caracas', 'Caracas', 'palomina', 'madre', 32423523);
+(8466948, 'Dilia', 'Coromoto', 'Cones', 'Carvo', 'Femenino', 4166229033, 'Las Villas', 1, '1962-07-20', 'Cantaura', 'Alcibiades', 'Corina', 'Si', 'Carrizal', 'Miranda', 'Venezuela', 'Oswaldo', 'Hijo', 4141613227),
+(18539330, 'Oswaldo', 'Andres', 'Diaz', 'Cones', 'Masculino', 4141613227, 'Las Villas', 1, '1989-11-25', 'Cantaura', 'Oswaldo', 'Dilia', 'Si', 'Carrizal', 'Miranda', 'Venezuela', 'Coromoto', 'Madre', 4166229033),
+(20546378, 'Pedro ', 'Pablo ', 'Perez', 'Jimenez', 'Masculino', 4145687948, 'Caracas', 3, '1999-02-02', 'Caracas', 'Pedro', 'Palomina', 'Si', 'Caracas', 'Caracas', 'Caracas', 'palomina', 'madre', 4268974562);
 
 -- --------------------------------------------------------
 
@@ -268,11 +235,8 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   `telefono` int(11) DEFAULT NULL,
   `direccion` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `servicio_id` int(11) DEFAULT NULL,
-  `nombre_usuario` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `clave` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `rol` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
   `tipo_profesional` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
   `codigo_profesional` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -283,9 +247,11 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`id`, `primer_nombre`, `segundo_nombre`, `primer_apellido`, `segundo_apellido`, `sexo`, `telefono`, `direccion`, `servicio_id`, `nombre_usuario`, `clave`, `rol`, `created_at`, `updated_at`, `tipo_profesional`, `codigo_profesional`) VALUES
-(212, 'Ysabella', 'Ela', 'Carneiro', 'Bolivar', 'Femenino', 3232, 'av...', 0, NULL, 'ysabella', 'Medico', '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL, NULL),
-(19294704, 'Miguel', 'Angel', 'Martinez', 'Farias', 'Masculino', 1313, 'Av...', NULL, 'miguel.martinez', 'miguel', 'Taquillero', '2012-01-27 00:00:00', '2012-01-27 00:00:00', '', 0);
+INSERT INTO `usuarios` (`id`, `primer_nombre`, `segundo_nombre`, `primer_apellido`, `segundo_apellido`, `sexo`, `telefono`, `direccion`, `servicio_id`, `clave`, `rol`, `tipo_profesional`, `codigo_profesional`) VALUES
+(386, 'Amado', NULL, 'Escartin', 'Ch', 'Masculino', NULL, NULL, 280, NULL, 'Medico', 'Medico especialista', 101),
+(2974, 'Jaime', NULL, 'Avila', NULL, 'Masculino', NULL, NULL, 280, NULL, 'Medico', 'Medico especialista', 101),
+(3444, 'Reynaldo', NULL, 'Arosemena', NULL, 'Masculino', NULL, NULL, 280, NULL, 'Medico', 'Medico especialista', 101),
+(19294704, 'Miguel', 'Angel', 'Martinez', 'Farias', 'Masculino', 1313, 'Av...', NULL, 'miguel', 'Taquillero', '', 0);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
