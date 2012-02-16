@@ -5,12 +5,12 @@ require_once('calendar/classes/tc_calendar.php');
 session_start();
 header("Cache-control: private");
 if ($_SESSION['estado']  == "Conectado"){
-  echo "<font face='arial' size='3'>Bienvenido " .$_SESSION['usuario']."</font>";
+  echo "<p><font face='arial' size='3'>Bienvenido " .$_SESSION['usuario']."<a style='margin-left: 2em' href='index.php'>Cerrar Sesi&oacute;n</a></font></p>";
 }
 include ('conexion.php');
 	
 $id = $_POST['cedula'];
-$numero_historia = ""; $primer_nombre = ""; $segundo_nombre = ""; $primer_apellido = ""; $segundo_apellido = ""; $nombre_padre = ""; $nombre_madre = ""; $sexo = ""; $telefono = ""; $fecha_nacimiento = ""; $fecha[2] = "01"; $fecha[1] = "01"; $fecha[0] = "2000" ;$lugar_nacimiento = ""; $seguro_social = ""; $provincia = ""; $distrito = ""; $corregimiento = ""; $direccion = ""; $nombre_urgencias = ""; $parentesco_urgencias = ""; $telefono_urgencias = "";
+$numero_historia = ""; $nombre_completo = ""; $primer_apellido = ""; $segundo_apellido = ""; $nombre_padre = ""; $nombre_madre = ""; $sexo = ""; $telefono = ""; $fecha_nacimiento = ""; $fecha[2] = "01"; $fecha[1] = "01"; $fecha[0] = "2000" ;$lugar_nacimiento = ""; $seguro_social = ""; $provincia = ""; $distrito = ""; $corregimiento = ""; $direccion = ""; $nombre_urgencias = ""; $parentesco_urgencias = ""; $telefono_urgencias = "";
 $query = mysql_query ("SELECT * FROM pacientes where id = '$id'", $db_link);
 
 $mensaje_inicial = "Registrar Paciente";
@@ -19,9 +19,9 @@ if (mysql_num_rows($query)!= 0)
 {
 	$mensaje_inicial = "Editar Paciente";
 	$r = mysql_fetch_array ($query);
-	$numero_historia = $r['numero_historia'];        
-	$primer_nombre = $r['primer_nombre'];
-	$segundo_nombre = $r['segundo_nombre'];
+	
+	$numero_historia = $r['numero_historia'];
+	$nombre_completo = $r['nombre_completo'];
 	$primer_apellido = $r['primer_apellido'];
 	$segundo_apellido = $r['segundo_apellido'];
 	$nombre_padre =  $r['nombre_padre'];
@@ -74,7 +74,7 @@ if (mysql_num_rows($query)!= 0)
 	
 	<body>
 		<form id="formulario_cedula_nueva" onsubmit = "modificar_campos();return false;" action = "" method = "POST">
-			<strong>CEDULA: </strong>
+			<strong>CEDULA DEL PACIENTE: </strong>
 			<input type="text" name = "cedula" id = "cedula"/>
 			<input type="submit" value="Ingresar"/>
 		</form>
@@ -90,7 +90,9 @@ if (mysql_num_rows($query)!= 0)
 					</ul>
 
 					<div id="tabs-1" align = "center">
-						<p><?php echo $mensaje_inicial;?></p>
+						<div id = "resultadoGuardarCambiosPaciente">
+							<p><?php echo $mensaje_inicial;?></p>
+						</div>
 
 						<form id = "formulario_registro_paciente" onsubmit = "GuardarCambiosPaciente();return false;" action = "" method = "POST">
 							<table>
@@ -103,12 +105,8 @@ if (mysql_num_rows($query)!= 0)
 								    <td><input style="width:150px" type = "text" name = "numero_historia" id = "numero_historia" value = "<? echo $numero_historia;?>"/></td>
 								</tr>
 								<tr>
-				  					<td><font color = "#000000">Primer Nombre:</font></td>
-									<td><input style="width:150px" type = "text" name = "primer_nombre" id = "primer_nombre" value = "<? echo $primer_nombre;?>"/></td>
-								</tr>
-								<tr>
-				  					<td><font color = "#000000">Segundo Nombre:</font></td>
-								    <td><input style="width:150px" type = "text" name = "segundo_nombre" id = "segundo_nombre"  value = "<? echo $segundo_nombre;?>"/></td>
+				  					<td><font color = "#000000">Nombre Completo:</font></td>
+									<td><input style="width:150px" type = "text" name = "nombre_completo" id = "nombre_completo" value = "<? echo $nombre_completo;?>"/></td>
 								</tr>
 								<tr>
 				  					<td><font color = "#000000">Primer Apellido:</font></td>
@@ -199,14 +197,13 @@ if (mysql_num_rows($query)!= 0)
 							</table>				
 				
 							<input type = "submit" value="Guardar Cambios"/>
-							<div id = "resultadoGuardarCambiosPaciente"></div>
 						</form>
 					</div>
 					
 					<div id="tabs-2" align = "center">
 						<p>Registrar Cita</p>
 
-						<form id = "formulario_registro_cita" onsubmit = "GuardarCambiosCita();return false;" action = "" method = "POST">
+						<form id = "formulario_registro_cita" onsubmit = "GuardarCambiosCita();ActualizarHistorial();return false;" action = "" method = "POST">
 							<table>
 								<tr>
 				  					<td><font color = "#000000">Cedula del paciente:</font></td>
@@ -227,11 +224,11 @@ if (mysql_num_rows($query)!= 0)
 									<td><font color = "#000000">Servicio:</font></td>
 				  					<td><select name="servicios" style="width:150px" id = "servicios">
 									<?php
-										$query=mysql_query("SELECT nombre_servicio FROM servicios ORDER BY nombre_servicio ASC");
+										$query_servicios=mysql_query("SELECT * FROM servicios ORDER BY nombre_servicio ASC");
 										$i=0;
-										while ($row=mysql_fetch_array($query))
+										while ($row=mysql_fetch_array($query_servicios))
 										{
-											echo "<option value=".$row['nombre_servicio'].">".$row['nombre_servicio']."</option>\n";
+											echo "<option value=".$row['codigo_servicio'].">".$row['nombre_servicio']."</option>\n";
 										}
 									?> 
 									</select></td>
@@ -284,54 +281,102 @@ if (mysql_num_rows($query)!= 0)
 
 							<input type = "submit" value="Guardar Cita"/>
 							<div id = "resultadoCita"></div>
-						</form>
+						</form>  
+					</div>
 
-
-				        </div>
-
-				        <div id="tabs-3">
+					<div id="tabs-3">						
 						<?php
-							$query2 = mysql_query ("SELECT * FROM cita where paciente_id = '$id'", $db_link);
-							
-							if (mysql_num_rows($query2)!= 0){
-
-								echo "
-								<table>";
-					                echo "<tr>
-										<td><p><font color = '#000000'>Id_cita</font></p></td>
-										<td><p><font color = '#000000'> Id de paciente</font></p></td>
-										<td><p><font color = '#000000'> Id de medico</font></p></td>
-										<td><p><font color = '#000000'>Tipo de paciente</font></p></td>
-										<td><p><font color = '#000000'> Frecuentacion en la institucion</font></p></td>
-										<td><p><font color = '#000000'> Frecuentacion de servicio</font></p></td>
-										<td><p><font color = '#000000'> Tipo de Atencion</font></p></td>
-										<td><p><font color = '#000000'>Atencion por</font></p></td>
-										<td><p><font color = '#000000'>Area de Referencia </font></p></td>
-									</tr>";
-									while ($fila = mysql_fetch_array ($query2)){
-										
-									echo"
-									<tr>";
-										echo "<td><p><font color = '#000000'>" .$fila['id']. "</font></p></td>";
-										echo "<td><p><font color = '#000000'> " .$fila['paciente_id']. "</font></p></td>";
-										echo "<td><p><font color = '#000000'>  " .$fila['medico_id']. " </font></p></td>";
-										echo "<td><p><font color = '#000000'>  " .$fila['tipo_paciente']."  </font></p></td>";
-										echo "<td><p><font color = '#000000'>  " .$fila['frecuentacion_inst']. " </font></p></td>";
-										echo "<td><p><font color = '#000000'> " .$fila['frecuentacion_serv']. "</font></p></td>";
-										echo "<td><p><font color = '#000000'>  " .$fila['tipo_atencion']. " </font></p></td>";
-										echo "<td><p><font color = '#000000'>  " .$fila['atencion_por']. "</font></p></td>";
-										echo "<td><p><font color = '#000000'> " .$fila['area_referencia']. "</font></p></td>";
-										echo "<td><p><font color = '#000000'>  " .$fila['fecha']. "</font></p></td>";
-										echo "<td><p><font color = '#000000'> " .$fila['turno']. "</font></p></td>";
-									echo "</tr>"; 
-									}
-								echo "</table>";
+							$query_datos = mysql_query ("SELECT * FROM pacientes where id = '$id'", $db_link);
+							if (mysql_num_rows($query_datos)!= 0){
+								echo "<div id='datos_paciente'>";
+									$fila = mysql_fetch_array ($query_datos);
+									$array = array($fila['nombre_completo'],$fila['primer_apellido'],$fila['segundo_apellido']);
+									$nombre = implode(" ", $array);
+									list($year,$month,$day) = explode("-",$fecha_nacimiento);
+									$edad  = date("Y") - $year;
+									$month_diff = date("m") - $month;
+									$day_diff   = date("d") - $day;
+									if ($day_diff < 0 || $month_diff < 0)	$edad--;
 									
+									echo "
+									<table>
+										<tr>
+											<td><p><font color = '#000000'>C&eacute;dula</font></p></td>
+											<td><p><font color = '#000000'>Nombre completo</font></p></td>
+											<td><p><font color = '#000000'>Sexo</font></p></td>
+											<td><p><font color = '#000000'>Edad</font></p></td>
+											<td><p><font color = '#000000'>N&uacute;mero de historia</font></p></td>
+										</tr>
+										<tr>
+											<td><p><font color = '#000000'>" .$fila['id']. "</font></p></td>
+											<td><p><font color = '#000000'> " .$nombre."</font></p></td>
+											<td><p><font color = '#000000'>  " .$fila['sexo']. " </font></p></td>
+											<td><p><font color = '#000000'>  " .$edad."  </font></p></td>
+											<td><p><font color = '#000000'>  " .$fila['numero_historia']. " </font></p></td>
+										</tr>
+									</table><br></br>";
+								
+									echo "<div id='historial_citas'>";
+										$query_hitoria = mysql_query ("SELECT * FROM cita where paciente_id = '$id' ORDER BY 'fecha'", $db_link);										
+										if (mysql_num_rows($query_hitoria)!= 0){
+										
+											echo "
+											<table>";
+												echo "<tr>
+													<td><p><font color = '#000000'>Cita</font></p></td>
+													<td><p><font color = '#000000'>Servicio</font></p></td>
+													<td><p><font color = '#000000'>Medico</font></p></td>
+													<td><p><font color = '#000000'>Tipo de paciente</font></p></td>
+													<td><p><font color = '#000000'>Frecuentacion en la institucion</font></p></td>
+													<td><p><font color = '#000000'>Frecuentacion de servicio</font></p></td>
+													<td><p><font color = '#000000'>Tipo de Atencion</font></p></td>
+													<td><p><font color = '#000000'>Atencion por</font></p></td>
+													<td><p><font color = '#000000'>Area de Referencia </font></p></td>
+													<td><p><font color = '#000000'>Fecha</font></p></td>
+													<td><p><font color = '#000000'>Turno</font></p></td>
+												</tr>";
+												
+												while ($fila = mysql_fetch_array ($query_hitoria)){
+													$medico = $fila['medico_id'];
+													$array = array("0",$medico);
+													$medico = implode("",$array);
+													
+													
+													
+													$query_servicio = mysql_query ("SELECT S.nombre_servicio FROM usuarios as U, servicios as S WHERE U.id = '$medico' AND U.servicio_id=S.codigo_servicio", $db_link);
+													//SELECT nombre_servicio FROM servicios where codigo_servicio IN (
+													$servicio = mysql_fetch_array ($query_servicio);
+													
+													$query_medico = mysql_query ("SELECT * FROM usuarios WHERE id = '$medico'",$db_link);
+													$medico_datos = mysql_fetch_array ($query_medico);
+													
+													echo"
+													<tr>
+														<td><p><font color = '#000000'>" .$fila['id']. "</font></p></td>
+														<td><p><font color = '#000000'>" .$servicio['nombre_servicio']. "</font></p></td>
+														<td><p><font color = '#000000'>" .$medico_datos['nombre_completo']. " </font></p></td>
+														<td><p><font color = '#000000'>" .$fila['tipo_paciente']."  </font></p></td>
+														<td><p><font color = '#000000'>" .$fila['frecuentacion_inst']. " </font></p></td>
+														<td><p><font color = '#000000'>" .$fila['frecuentacion_serv']. "</font></p></td>
+														<td><p><font color = '#000000'>" .$fila['tipo_atencion']. " </font></p></td>
+														<td><p><font color = '#000000'>" .$fila['atencion_por']. "</font></p></td>
+														<td><p><font color = '#000000'>" .$fila['area_referencia']. "</font></p></td>
+														<td><p><font color = '#000000'>" .$fila['fecha']. "</font></p></td>
+														<td><p><font color = '#000000'>" .$fila['turno']. "</font></p></td>
+													</tr>";
+												}
+												
+											echo "</table>";
+										
+										}else{
+											echo "No hay registro de citas";
+										}
+									echo "</div>";
+								echo "</div>";
 							}else{
-								echo "No hay registro de citas";
+								echo "No se ha registrado";
 							}
 						?>
-
 					</div>
 				</div>
 			</div>

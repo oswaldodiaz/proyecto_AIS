@@ -1,3 +1,6 @@
+/**************
+Funciones AJAX
+**************/
 function Ajax(){
 		var xmlhttp=false;
         try	{   xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
@@ -22,6 +25,9 @@ function envio_ajax(datos,divResultado,parametros){
 	ajax.send(parametros);
 }
 
+/**********************
+Funciones de validacion
+**********************/
 function presencia(valor){
 	if (valor.value.length == 0)	return false;
 	return true;
@@ -33,15 +39,10 @@ function validar_entero(valor){
     return true
 }
 
-function Autenticar(){
-	var form = document.getElementById('formularioIngreso');
-	if(presencia(form.cedula) && presencia(form.clave) && validar_entero(form.cedula)){
-		var parametros = "id="+form.cedula.value+"&clave="+form.clave.value;
-		divResultado = document.getElementById('resultado');
-		datos = "php/verificar.php"
-		envio_ajax(datos,divResultado,parametros)
-	}
-	else	alert("Número de cédula y/o clave incorrectos.");
+function validar_string(string){
+	if(!presencia(string))	return false;
+	if(!(/[a-z,A-Z]+$/.test(string.value)))	return false;
+    return true
 }
 
 function validarCedula(){
@@ -51,21 +52,7 @@ function validarCedula(){
 		form.submit();
 	}
 	else	alert("Numero de Cédula inválido.");
-}
-
-function buscar_medico(){
-	var form = document.getElementById('formulario_ver_citas_dia');
-	var id_medico = document.getElementById('medico').value;
-	form.action = "php/medico.php?id="+id_medico;
-	form.submit();
-}
-
-function modificar_campos(){
-	var form = document.getElementById('formulario_cedula_nueva');
-	if(validar_entero(form.cedula)){
-		form.action = "taquillero.php";
-		form.submit();
-	}   
+	
 }
 
 function validar_fecha(fecha){
@@ -76,53 +63,89 @@ function validar_fecha(fecha){
 	if(Dia == "00" && Mes == "00" && Ano == "0000")	return false;
 	return true;
 }
+/***********************
+Funciones de formularios
+***********************/
+function Autenticar(){
+	var form = document.getElementById('formularioIngreso');
+	if(presencia(form.id) && presencia(form.clave)){
+		var parametros = "id="+form.id.value+"&clave="+form.clave.value;
+		divResultado = document.getElementById('resultado');
+		datos = "php/verificar.php"
+		envio_ajax(datos,divResultado,parametros)
+	}
+	else	alert("Id y/o clave incorrectos.");
+}
 
-function Mostrar() 
-   { 
-   var form = document.getElementById('formulario_registro_paciente2');
-      alert(form.sexo.options[form.sexo.selectedIndex].value); 
-   } 
+/**********************
+Funciones de Taquillero
+**********************/
+function modificar_campos(){
+	var form = document.getElementById('formulario_cedula_nueva');
+	if(validar_entero(form.cedula)){
+		form.action = "taquillero.php";
+		form.submit();
+	}   
+}
 
-function validar_string(string){
-	if(!presencia(string))	return false;
-	if(!(/[a-z,A-Z]+$/.test(string.value)))	return false;
-    return true
+function ValidarFormularioPaciente(form){
+	if(!validar_entero(form.numero_historia)){			alert("Inserte un numero de historia válido");	return false;}
+	if(!validar_string(form.nombre_completo)){			alert("Inserte un nombre válido");	return false;}
+	if(!validar_string(form.primer_apellido)){			alert("Inserte un primer apellido válido");	return false;}
+	if(!validar_string(form.segundo_apellido)){			alert("Inserte un segundo apellido válido");	return false;}
+	if(!validar_string(form.nombre_padre)){				alert("Inserte un nombre de padre válido");	return false;}
+	if(!validar_string(form.nombre_madre)){				alert("Inserte un nombre de madre válido");	return false;}
+	if(!validar_entero(form.telefono)){					alert("Inserte un telefono válido");	return false;}
+	if(!validar_fecha(form.fecha_nacimiento)){			alert("Inserte una fecha de nacimiento válida");	return false;}
+	if(!validar_string(form.lugar_nacimiento)){			alert("Inserte un lugar de nacimiento válido");	return false;}
+	if(!validar_string(form.provincia)){				alert("Inserte una provincia válida");	return false;}
+	if(!validar_string(form.distrito)){					alert("Inserte un distrito válido");	return false;}
+	if(!validar_string(form.corregimiento)){			alert("Inserte un corregimiento válido");	return false;}
+	if(!validar_string(form.direccion)){				alert("Inserte una direccion válida");	return false;}
+	if(!validar_string(form.nombre_urgencias)){			alert("Inserte un nombre de urgencias válido");	return false;}
+	if(!validar_string(form.parentesco_urgencias)){		alert("Inserte un parentesco válido");	return false;}
+	if(!validar_entero(form.telefono_urgencias)){		alert("Inserte un telefono de urgencias válido");	return false;}
+	return true;
 }
 
 function GuardarCambiosPaciente(){
 	var form = document.getElementById('formulario_registro_paciente');
 	
-	if(!validar_entero(form.numero_historia)){											alert("Inserte un numero de historia válido");	return false;}
-	if(!validar_string(form.primer_nombre)){											alert("Inserte un primer nombre válido");	return false;}
-	if(presencia(form.segundo_nombre)){if(!validar_string(form.segundo_nombre)){		alert("Inserte un segundo nombre válido");	return false;}}
-	if(!validar_string(form.primer_apellido)){											alert("Inserte un primer apellido válido");	return false;}
-	if(presencia(form.segundo_apellido)){if(!validar_string(form.segundo_apellido)){		alert("Inserte un segundo apellido válido");	return false;}}
-	if(!validar_string(form.nombre_padre)){												alert("Inserte un nombre de padre válido");	return false;}
-	if(!validar_string(form.nombre_madre)){												alert("Inserte un nombre de madre válido");	return false;}
-	if(!validar_entero(form.telefono)){													alert("Inserte un telefono válido");	return false;}
-	if(!validar_fecha(form.fecha_nacimiento)){											alert("Inserte una fecha de nacimiento válida");	return false;}
-	if(!validar_string(form.lugar_nacimiento)){											alert("Inserte un lugar de nacimiento válido");	return false;}
-	if(!validar_string(form.provincia)){												alert("Inserte una provincia válida");	return false;}
-	if(!validar_string(form.distrito)){													alert("Inserte un distrito válido");	return false;}
-	if(!validar_string(form.corregimiento)){											alert("Inserte un corregimiento válido");	return false;}
-	if(!validar_string(form.direccion)){												alert("Inserte una direccion válida");	return false;}
-	if(!validar_string(form.nombre_urgencias)){											alert("Inserte un nombre de urgencias válido");	return false;}
-	if(!validar_string(form.parentesco_urgencias)){										alert("Inserte un parentesco válido");	return false;}
-	if(!validar_entero(form.telefono_urgencias)){		alert("Inserte un telefono de urgencias válido");	return false;}
+	if(!ValidarFormularioPaciente(form))	return false;
 	
-	var parametros = "id="+form.id.value+"&numero_historia="+form.numero_historia.value+"&primer_nombre="+form.primer_nombre.value+"&segundo_nombre="+form.segundo_nombre.value+"&primer_apellido="+form.primer_apellido.value+"&segundo_apellido="+form.segundo_apellido.value+"&nombre_padre="+form.nombre_padre.value+	"&nombre_madre="+form.nombre_madre.value+"&sexo="+form.sexo.options[form.sexo.selectedIndex].value+"&telefono="+form.telefono.value+"&lugar_nacimiento="+form.lugar_nacimiento.value+"&fecha_nacimiento="+form.fecha_nacimiento.value+	"&seguro_social="+form.seguro_social.options[form.seguro_social.selectedIndex].value+"&provincia="+form.provincia.value+"&distrito="+form.distrito.value+"&corregimiento="+form.corregimiento.value+"&direccion="+form.direccion.value+	"&nombre_urgencias="+form.nombre_urgencias.value+"&parentesco_urgencias="+form.parentesco_urgencias.value+"&telefono_urgencias="+form.telefono_urgencias.value;
+	var parametros = "id="+form.id.value+"&numero_historia="+form.numero_historia.value+"&nombre_completo="+form.nombre_completo.value+"&primer_apellido="+form.primer_apellido.value+"&segundo_apellido="+form.segundo_apellido.value+"&nombre_padre="+form.nombre_padre.value+	"&nombre_madre="+form.nombre_madre.value+"&sexo="+form.sexo.options[form.sexo.selectedIndex].value+"&telefono="+form.telefono.value+"&lugar_nacimiento="+form.lugar_nacimiento.value+"&fecha_nacimiento="+form.fecha_nacimiento.value+	"&seguro_social="+form.seguro_social.options[form.seguro_social.selectedIndex].value+"&provincia="+form.provincia.value+"&distrito="+form.distrito.value+"&corregimiento="+form.corregimiento.value+"&direccion="+form.direccion.value+	"&nombre_urgencias="+form.nombre_urgencias.value+"&parentesco_urgencias="+form.parentesco_urgencias.value+"&telefono_urgencias="+form.telefono_urgencias.value;
 	divResultado = document.getElementById('resultadoGuardarCambiosPaciente');
 	datos = "registro.php";
-	envio_ajax(datos,divResultado,parametros)
+	envio_ajax(datos,divResultado,parametros);
+	
 }
 
 function GuardarCambiosCita(){
+	if(!ValidarFormularioPaciente(document.getElementById('formulario_registro_paciente')))	 return false;
 	var form = document.getElementById('formulario_registro_cita');
 	var parametros = "id="+form.id.value+"&atencion_por="+form.atencion_por.options[form.atencion_por.selectedIndex].value+"&servicios="+form.servicios.options[form.servicios.selectedIndex].value+"&tipo_paciente="+form.tipo_paciente.options[form.tipo_paciente.selectedIndex].value+"&frecuentacion_institucion="+form.frecuentacion_institucion.options[form.frecuentacion_institucion.selectedIndex].value+"&frecuentacion_servicio="+form.frecuentacion_servicio.options[form.frecuentacion_servicio.selectedIndex].value+"&tipo_atencion="+form.tipo_atencion.options[form.tipo_atencion.selectedIndex].value+"&area_referencia="+form.area_referencia.options[form.area_referencia.selectedIndex].value;
-	
 	divResultado = document.getElementById('resultadoCita');
 	datos = "registro_cita.php";
-	envio_ajax(datos,divResultado,parametros)
+	envio_ajax(datos,divResultado,parametros);
+}
+
+
+function ActualizarHistorial(){
+	var form = document.getElementById('formulario_registro_cita');
+	var parametros = "id="+form.id.value;
+	divResultado = document.getElementById('historial_citas');
+	datos = "actualizacion_historial.php";
+	envio_ajax(datos,divResultado,parametros);
+}
+
+/******************
+Funciones de Medico
+******************/
+function buscar_medico(){
+	var form = document.getElementById('formulario_ver_citas_dia');
+	var id_medico = document.getElementById('medico').value;
+	form.action = "php/medico.php?id="+id_medico;
+	form.submit();
 }
 
 function insertar_informe(){
@@ -141,6 +164,5 @@ function insertar_informe(){
 		}
 	}
 	ajax.send(null);
-       
 }
 

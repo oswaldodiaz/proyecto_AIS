@@ -21,25 +21,23 @@ header("Cache-control: private");
 		<script src="js/jquery.ui.position.js"></script>
 		<script src="js/jquery.ui.widget.js"></script>
 		<script src="js/jquery.ui.tabs.js"></script>
-	
-	
-	
+		
 	</head>
 
 	<body>
+		<br>
+		<h1 align="center">Inicio de sesión</h1>
 		<div id = "resultado">  
 			<div id = "sesion">
 				<span>
-					<form id = "formularioIngreso" onsubmit = "Autenticar();return false;" action = "" method = "POST">
-						<p align="right"><font face="arial" color="#000000" font="font" size = "2"><strong>C&eacute;dula: </strong></font>
-							<input TYPE="text" NAME="cedula" id="cedula"/>
-						</p>
-						<p align="right"><font face="ARIAL" color="#000000" font size = "2"> <strong> Contrase&ntilde;a </strong></font>
-							<input TYPE="password" NAME="clave" id="clave"/>
-						</p>
-						<p align="right">
-							<INPUT TYPE="submit" value="Ingresar"/>
-						</p>
+					<form align="center" id = "formularioIngreso" onsubmit = "Autenticar();return false;" action = "" method = "POST">
+						<p><font face="arial" color="#000000" font="font" size = "2"><strong>ID de usuario:</strong></font>
+						<input style="margin-left: 1em" TYPE="text" NAME="id" id="id"/></p>
+						
+						<p><font face="ARIAL" color="#000000" font size = "2"> <strong>Contrase&ntilde;a:</strong></font>
+						<input style="margin-left: 1.9em" TYPE="password" NAME="clave" id="clave"/></p>
+						
+						<p><INPUT TYPE="submit" value="Ingresar"/></p>
 					</form>
 				</span>
 				<?php
@@ -50,11 +48,11 @@ header("Cache-control: private");
 					}*/
 				?>
 			</div>
-		<script>
-		$(function() {
-			$( "#tabs" ).tabs();
-		});
-		</script>
+			<script>
+			$(function() {
+				$( "#tabs" ).tabs();
+			});
+			</script>
 		</div>
 	</body>
 </html>
