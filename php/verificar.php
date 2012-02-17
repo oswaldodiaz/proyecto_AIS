@@ -15,7 +15,7 @@
         $_SESSION['rol'] = $row['rol'];
 		
 		echo "<style>span {display:none;}</style>";
-		echo "<font face='arial' size='3'>Bienvenido " .$nombre[0]." " .$nombre[2]."<a style='margin-left: 2em' href='index.php'>Cerrar Sesi&oacute;n</a></font>";
+		echo "<font face='arial' size='3'>Bienvenido " .$nombre[0]."<a style='margin-left: 2em' href='index.php'>Cerrar Sesi&oacute;n</a></font>";
 
 		if ($_SESSION['rol'] == "Taquillero"){
 			echo "<form align='center' id = 'formulario_verificar' onsubmit = 'validarCedula();return false;' action = '' method = 'POST'>
@@ -26,7 +26,7 @@
 			if ($_SESSION['rol'] == "Medico"){
 				echo "<form id = 'formulario_ver_citas_dia' onsubmit = 'buscar_medico();return false;' action = '' method = 'POST'>
 				<input type='submit' value = 'Ver Citas Del Dia'/>
-				<input type = 'hidden' id = 'medico' value = '$id'/>
+				<input type = 'hidden' id = 'id' name = 'id' value = '$id'/>
 				</form>";
 				}
 			}

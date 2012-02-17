@@ -1,6 +1,12 @@
 <?php
 session_start();
 header("Cache-control: private");
+
+if ($_SESSION['estado']  == "Conectado"){
+	$_SESSION['estado'] = "Desconectado";
+	$_SESSION['usuario'] = "";
+    $_SESSION['rol'] = "";
+}
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

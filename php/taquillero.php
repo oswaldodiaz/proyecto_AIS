@@ -5,7 +5,7 @@ require_once('calendar/classes/tc_calendar.php');
 session_start();
 header("Cache-control: private");
 if ($_SESSION['estado']  == "Conectado"){
-  echo "<p><font face='arial' size='3'>Bienvenido " .$_SESSION['usuario']."<a style='margin-left: 2em' href='index.php'>Cerrar Sesi&oacute;n</a></font></p>";
+  echo "<p><font face='arial' size='3'>Bienvenido " .$_SESSION['usuario']."<a style='margin-left: 2em' href='../index.php'>Cerrar Sesi&oacute;n</a></font></p>";
 }
 include ('conexion.php');
 	
@@ -284,7 +284,8 @@ if (mysql_num_rows($query)!= 0)
 						</form>  
 					</div>
 
-					<div id="tabs-3">						
+					<div id="tabs-3">
+						
 						<?php
 							$query_datos = mysql_query ("SELECT * FROM pacientes where id = '$id'", $db_link);
 							if (mysql_num_rows($query_datos)!= 0){
@@ -321,52 +322,52 @@ if (mysql_num_rows($query)!= 0)
 										if (mysql_num_rows($query_hitoria)!= 0){
 										
 											echo "
-											<table>";
-												echo "<tr>
-													<td><p><font color = '#000000'>Cita</font></p></td>
-													<td><p><font color = '#000000'>Servicio</font></p></td>
-													<td><p><font color = '#000000'>Medico</font></p></td>
-													<td><p><font color = '#000000'>Tipo de paciente</font></p></td>
-													<td><p><font color = '#000000'>Frecuentacion en la institucion</font></p></td>
-													<td><p><font color = '#000000'>Frecuentacion de servicio</font></p></td>
-													<td><p><font color = '#000000'>Tipo de Atencion</font></p></td>
-													<td><p><font color = '#000000'>Atencion por</font></p></td>
-													<td><p><font color = '#000000'>Area de Referencia </font></p></td>
-													<td><p><font color = '#000000'>Fecha</font></p></td>
-													<td><p><font color = '#000000'>Turno</font></p></td>
-												</tr>";
-												
-												while ($fila = mysql_fetch_array ($query_hitoria)){
-													$medico = $fila['medico_id'];
-													$array = array("0",$medico);
-													$medico = implode("",$array);
-													
-													
-													
-													$query_servicio = mysql_query ("SELECT S.nombre_servicio FROM usuarios as U, servicios as S WHERE U.id = '$medico' AND U.servicio_id=S.codigo_servicio", $db_link);
-													//SELECT nombre_servicio FROM servicios where codigo_servicio IN (
-													$servicio = mysql_fetch_array ($query_servicio);
-													
-													$query_medico = mysql_query ("SELECT * FROM usuarios WHERE id = '$medico'",$db_link);
-													$medico_datos = mysql_fetch_array ($query_medico);
-													
-													echo"
-													<tr>
-														<td><p><font color = '#000000'>" .$fila['id']. "</font></p></td>
-														<td><p><font color = '#000000'>" .$servicio['nombre_servicio']. "</font></p></td>
-														<td><p><font color = '#000000'>" .$medico_datos['nombre_completo']. " </font></p></td>
-														<td><p><font color = '#000000'>" .$fila['tipo_paciente']."  </font></p></td>
-														<td><p><font color = '#000000'>" .$fila['frecuentacion_inst']. " </font></p></td>
-														<td><p><font color = '#000000'>" .$fila['frecuentacion_serv']. "</font></p></td>
-														<td><p><font color = '#000000'>" .$fila['tipo_atencion']. " </font></p></td>
-														<td><p><font color = '#000000'>" .$fila['atencion_por']. "</font></p></td>
-														<td><p><font color = '#000000'>" .$fila['area_referencia']. "</font></p></td>
-														<td><p><font color = '#000000'>" .$fila['fecha']. "</font></p></td>
-														<td><p><font color = '#000000'>" .$fila['turno']. "</font></p></td>
+												<table>";
+													echo "<tr>
+														<td><p><font color = '#000000'>Cita</font></p></td>
+														<td><p><font color = '#000000'>Servicio</font></p></td>
+														<td><p><font color = '#000000'>Medico</font></p></td>
+														<td><p><font color = '#000000'>Tipo de paciente</font></p></td>
+														<td><p><font color = '#000000'>Frecuentacion en la institucion</font></p></td>
+														<td><p><font color = '#000000'>Frecuentacion de servicio</font></p></td>
+														<td><p><font color = '#000000'>Tipo de Atencion</font></p></td>
+														<td><p><font color = '#000000'>Atencion por</font></p></td>
+														<td><p><font color = '#000000'>Area de Referencia </font></p></td>
+														<td><p><font color = '#000000'>Fecha</font></p></td>
+														<td><p><font color = '#000000'>Turno</font></p></td>
+														<td><p><font color = '#000000'>Modificar</font></p></td>
 													</tr>";
-												}
-												
-											echo "</table>";
+													
+													while ($fila = mysql_fetch_array ($query_hitoria)){
+														$medico = $fila['medico_id'];
+														$array = array("0",$medico);
+														$medico = implode("",$array);
+														$query_servicio = mysql_query ("SELECT nombre_servicio FROM servicios where codigo_servicio IN (SELECT servicio_id FROM usuarios WHERE id = '$medico')", $db_link);
+														$servicio = mysql_fetch_array ($query_servicio);
+														
+														$query_medico = mysql_query ("SELECT * FROM usuarios WHERE id = '$medico'",$db_link);
+														$medico_datos = mysql_fetch_array ($query_medico);
+														
+														if($fila['turno'] == "Mañana")
+															$fila['turno'] = "Ma&ntilde;ana";
+														
+														echo"
+														<tr>
+															<td><p><font color = '#000000'>" .$fila['id']. "</font></p></td>
+															<td><p><font color = '#000000'>" .$servicio['nombre_servicio']. "</font></p></td>
+															<td><p><font color = '#000000'>" .$medico_datos['nombre_completo']. " </font></p></td>
+															<td><p><font color = '#000000'>" .$fila['tipo_paciente']."  </font></p></td>
+															<td><p><font color = '#000000'>" .$fila['frecuentacion_inst']. " </font></p></td>
+															<td><p><font color = '#000000'>" .$fila['frecuentacion_serv']. "</font></p></td>
+															<td><p><font color = '#000000'>" .$fila['tipo_atencion']. " </font></p></td>
+															<td><p><font color = '#000000'>" .$fila['atencion_por']. "</font></p></td>
+															<td><p><font color = '#000000'>" .$fila['area_referencia']. "</font></p></td>
+															<td><p><font color = '#000000'>" .$fila['fecha']. "</font></p></td>
+															<td><p><font color = '#000000'>" .$fila['turno']. "</font></p></td>
+															<td><p><font color = '#000000'><a>Modificar</a></font></p></td>
+														</tr>";
+													}
+												echo "</table>";
 										
 										}else{
 											echo "No hay registro de citas";

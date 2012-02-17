@@ -13,7 +13,8 @@
 			case "Friday": return("viernes");		break;
 			case "Saturday": return("sabado");		break;
 		}
-	}
+	}	
+	
 	$today = date("Y-m-d");
 	$servicio = $_POST['servicios'];
 	$id = $_POST['id'];
@@ -37,7 +38,7 @@
 																				FROM cita
 																				WHERE fecha>='$today'
 																				GROUP BY medico_id)";
-					
+																				
 		$query_medico = mysql_query($query,$db_link);
 		if (mysql_num_rows($query_medico) != 0)//Existen medicos pertenecientes a este servicio que no tienen cita asignadas en un futuro
 		{
@@ -65,8 +66,6 @@
 		}
 	}
 	
-	
-	
 	if($codigo_medico != 0)
 	{
 		//Verificar que el paciente no tenga cita ya con el medico
@@ -74,7 +73,7 @@
 		$query_cita = mysql_query ($query,$db_link);
 		if(mysql_num_rows($query_cita) != 0)//El paciente ya tiene una cita asignada con este medico
 		{
-			echo "El paciente ya tiene una cita asignada con este medico";
+			echo "El paciente ya tiene una cita asignada con este m&eacute;dico";
 		}
 		else
 		{
@@ -112,15 +111,8 @@
 									VALUES 
 									('{$_POST['id']}', '$codigo_medico','{$_POST['atencion_por']}','{$_POST['tipo_paciente']}','{$_POST['frecuentacion_institucion']}','{$_POST['frecuentacion_servicio']}','{$_POST['tipo_atencion']}','{$_POST['area_referencia']}','$fecha','$turno')", $db_link);
 		
-			echo "Se guardó la cita exitosamente";
+			echo "Se guard&oacute; la cita exitosamente";
 		}
 	}
-		
 	
 ?>
-
-
-
-
-
-

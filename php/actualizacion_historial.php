@@ -21,6 +21,7 @@
 				<td><p><font color = '#000000'>Area de Referencia </font></p></td>
 				<td><p><font color = '#000000'>Fecha</font></p></td>
 				<td><p><font color = '#000000'>Turno</font></p></td>
+				<td><p><font color = '#000000'>Modificar</font></p></td>
 			</tr>";
 			
 			while ($fila = mysql_fetch_array ($query_hitoria)){
@@ -32,6 +33,9 @@
 				
 				$query_medico = mysql_query ("SELECT * FROM usuarios WHERE id = '$medico'",$db_link);
 				$medico_datos = mysql_fetch_array ($query_medico);
+				
+				if($fila['turno'] == "Mañana")
+					$fila['turno'] = "Ma&ntilde;ana";
 				
 				echo"
 				<tr>
@@ -46,6 +50,7 @@
 					<td><p><font color = '#000000'>" .$fila['area_referencia']. "</font></p></td>
 					<td><p><font color = '#000000'>" .$fila['fecha']. "</font></p></td>
 					<td><p><font color = '#000000'>" .$fila['turno']. "</font></p></td>
+					<td><p><font color = '#000000'><a>Modificar</a></font></p></td>
 				</tr>";
 			}
 		echo "</table>";
