@@ -24,12 +24,13 @@
 				</form>";
 		}else{
 			if ($_SESSION['rol'] == "Medico"){
-				echo "<form id = 'formulario_ver_citas_dia' onsubmit = 'buscar_medico();return false;' action = '' method = 'POST'>
+				echo "
+				<form id = 'formulario_ver_citas_dia' onsubmit = '' action = 'php/medico.php' method = 'POST'>
 				<input type='submit' value = 'Ver Citas Del Dia'/>
 				<input type = 'hidden' id = 'id' name = 'id' value = '$id'/>
 				</form>";
-				}
 			}
+		}
 	}else{
 		echo "<font face='arial' size='3'><p>Usted no se encuentra registrado</p><p><a href='index.php'>Volver</a></p></font>";
 	}

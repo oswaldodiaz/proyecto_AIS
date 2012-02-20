@@ -1,68 +1,57 @@
+/**************
+Funciones AJAX
+**************/
 function Ajax(){
-	
 		var xmlhttp=false;
-        try {
-                xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
+        try	{   xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
         } catch (e) {
-                try {
-                   xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-                } catch (E) {
-                        xmlhttp = false;
+                try {   xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                } catch (E) {    xmlhttp = false;
                 }
         }
-
-        if (!xmlhttp && typeof XMLHttpRequest!='undefined') {
-                xmlhttp = new XMLHttpRequest();
-        }
+        if (!xmlhttp && typeof XMLHttpRequest!='undefined') {    xmlhttp = new XMLHttpRequest();   }
         return xmlhttp;
 }
-function MostrarConsulta(){
-	
-	   
-	 var param1 = document.getElementById('usuario').value;
-	 var param2 = document.getElementById('key').value;
 
-				divResultado = document.getElementById('resultado');
-				ajax=Ajax();
-				ajax.open("GET", "php/verificar.php?id="+param1+"&key="+param2,true);
-				ajax.onreadystatechange=function() {
-					if (ajax.readyState==4) {
-							divResultado.innerHTML = ajax.responseText
-					}
-				}
-				ajax.send(null);
-			
-       
+function envio_ajax(datos,divResultado,parametros){
+	ajax=Ajax();
+	ajax.open("POST", datos,true);
+	ajax.onreadystatechange=function() {
+		if (ajax.readyState==4) {
+				divResultado.innerHTML = ajax.responseText
+		}
+	}
+	ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+	ajax.send(parametros);
+}
+
+/**********************
+Funciones de validacion
+**********************/
+function presencia(valor){
+	if (valor.value.length == 0)	return false;
+	return true;
+}
+
+function Autenticar(){
+	var form = document.getElementById('formularioIngreso');
+	if(presencia(form.id) && presencia(form.clave)){
+		var parametros = "id="+form.id.value+"&clave="+form.clave.value;
+		divResultado = document.getElementById('resultado');
+		datos = "php/verificar.php"
+		envio_ajax(datos,divResultado,parametros)
+	}
+	else	alert("Id y/o clave incorrectos.");
 }
 
 function GuardarCambiosUsuario(){
-	
-	   
-	var param1 = document.getElementById('codigo_usuario').value;
-	var param2 = document.getElementById('primer_nombre').value;
-	var param3 = document.getElementById('segundo_nombre').value;
-	var param4 = document.getElementById('primer_apellido').value;
-	var param5 = document.getElementById('segundo_apellido').value;
-	var param6 = document.getElementById('sexo').value;
-	var param7 = document.getElementById('telefono').value;
-	var param8 = document.getElementById('direccion').value;
-	var param9 = document.getElementById('servicio').value;
-	var param10 = document.getElementById('clave').value;
-	var param11 = document.getElementById('tipo_profesional').value;
-	var param12 = document.getElementById('codigo_profesional').value;
-        var param13 = document.getElementById('rol').value;
-
-
-				divResultado = document.getElementById('resultadoGuardarCambiosUsuarios');
-				ajax=Ajax();
-				ajax.open("GET", "registro.php?id="+param1+"&primer_nombre="+param2+"&segundo_nombre="+param3+"&primer_apellido="+param4+"&segundo_apellido="+param5+"&sexo="+param6+"&telefono="+param7+"&direccion="+param8+"&servicio="+param9+"&clave="+param10+"&tipo_profesional="+param11+"&codigo_profesional="+param12+"&rol="+param13,true);
-				ajax.onreadystatechange=function() {
-					if (ajax.readyState==4) {
-							divResultado.innerHTML = ajax.responseText
-					}
-				}
-				ajax.send(null);
-
-       
+	var form = document.getElementById('formularioRegistroUsuario');
+	if(presencia(form.id) && presencia(form.clave) && presencia(form.nombre_completo)){
+		var parametros = "id="+form.id.value+"&clave="+form.clave.value+"&nombre="+form.nombre_completo.value+"&sexo="+form.sexo.options[form.sexo.selectedIndex].value+"&telefono="+form.telefono.value+"&direccion="+form.direccion.value+"&servicio="+form.servicio.options[form.servicio.selectedIndex].value+"&tipo_profesional="+form.tipo_profesional.value+"&codigo_profesional="+form.codigo_profesional.value+"&rol="+form.rol.options[form.rol.selectedIndex].value+"&codigo_medico="+form.codigo_medico.value;
+		divResultado = document.getElementById('resultado');
+		datos = "registro.php"
+		envio_ajax(datos,divResultado,parametros)
+	}
+	else	alert("Id y/o clave incorrectos.");
 }
 

@@ -89,6 +89,13 @@ function modificar_campos(){
 }
 
 function ValidarFormularioPaciente(form){
+	if(validar_entero(form.numero_historia) && validar_string(form.nombre_completo) && validar_string(form.primer_apellido) && validar_string(form.segundo_apellido) && validar_string(form.nombre_padre) && validar_string(form.nombre_madre) && validar_entero(form.telefono) && validar_fecha(form.fecha_nacimiento) && validar_string(form.lugar_nacimiento) && validar_string(form.provincia) && validar_string(form.distrito) && validar_string(form.corregimiento) && validar_string(form.direccion) && validar_string(form.nombre_urgencias) && validar_string(form.parentesco_urgencias) && validar_entero(form.telefono_urgencias))	return true;
+	return false
+}
+
+function GuardarCambiosPaciente(){
+	var form = document.getElementById('formulario_registro_paciente');
+	
 	if(!validar_entero(form.numero_historia)){			alert("Inserte un numero de historia válido");	return false;}
 	if(!validar_string(form.nombre_completo)){			alert("Inserte un nombre válido");	return false;}
 	if(!validar_string(form.primer_apellido)){			alert("Inserte un primer apellido válido");	return false;}
@@ -105,13 +112,6 @@ function ValidarFormularioPaciente(form){
 	if(!validar_string(form.nombre_urgencias)){			alert("Inserte un nombre de urgencias válido");	return false;}
 	if(!validar_string(form.parentesco_urgencias)){		alert("Inserte un parentesco válido");	return false;}
 	if(!validar_entero(form.telefono_urgencias)){		alert("Inserte un telefono de urgencias válido");	return false;}
-	return true;
-}
-
-function GuardarCambiosPaciente(){
-	var form = document.getElementById('formulario_registro_paciente');
-	
-	if(!ValidarFormularioPaciente(form))	return false;
 	
 	var parametros = "id="+form.id.value+"&numero_historia="+form.numero_historia.value+"&nombre_completo="+form.nombre_completo.value+"&primer_apellido="+form.primer_apellido.value+"&segundo_apellido="+form.segundo_apellido.value+"&nombre_padre="+form.nombre_padre.value+	"&nombre_madre="+form.nombre_madre.value+"&sexo="+form.sexo.options[form.sexo.selectedIndex].value+"&telefono="+form.telefono.value+"&lugar_nacimiento="+form.lugar_nacimiento.value+"&fecha_nacimiento="+form.fecha_nacimiento.value+	"&seguro_social="+form.seguro_social.options[form.seguro_social.selectedIndex].value+"&provincia="+form.provincia.value+"&distrito="+form.distrito.value+"&corregimiento="+form.corregimiento.value+"&direccion="+form.direccion.value+	"&nombre_urgencias="+form.nombre_urgencias.value+"&parentesco_urgencias="+form.parentesco_urgencias.value+"&telefono_urgencias="+form.telefono_urgencias.value;
 	divResultado = document.getElementById('resultadoGuardarCambiosPaciente');
@@ -122,7 +122,7 @@ function GuardarCambiosPaciente(){
 
 function GuardarCambiosCita(){
 
-	if(!ValidarFormularioPaciente(document.getElementById('formulario_registro_paciente')))	 return false;
+	if(!ValidarFormularioPaciente(document.getElementById('formulario_registro_paciente'))){	alert("Complete los datos del paciente primero"); return false;}
 	var form = document.getElementById('formulario_registro_cita');
 	var parametros = "id="+form.id.value+"&atencion_por="+form.atencion_por.options[form.atencion_por.selectedIndex].value+"&servicios="+form.servicios.options[form.servicios.selectedIndex].value+"&tipo_paciente="+form.tipo_paciente.options[form.tipo_paciente.selectedIndex].value+"&frecuentacion_institucion="+form.frecuentacion_institucion.options[form.frecuentacion_institucion.selectedIndex].value+"&frecuentacion_servicio="+form.frecuentacion_servicio.options[form.frecuentacion_servicio.selectedIndex].value+"&tipo_atencion="+form.tipo_atencion.options[form.tipo_atencion.selectedIndex].value+"&area_referencia="+form.area_referencia.options[form.area_referencia.selectedIndex].value;
 	divResultado = document.getElementById('resultadoCita');
@@ -130,45 +130,21 @@ function GuardarCambiosCita(){
 	envio_ajax(datos,divResultado,parametros);
 }
 
-
-function ActualizarHistorial(){
-	var form = document.getElementById('formulario_registro_cita');
-	var parametros = "id="+form.id.value;
-	divResultado = document.getElementById('historial_citas');
-	datos = "actualizacion_historial.php";
-	envio_ajax(datos,divResultado,parametros);
-}
-
 /******************
 Funciones de Medico
 ******************/
-function buscar_medico(){
-	var form = document.getElementById('formulario_ver_citas_dia');
-	//var id_medico = document.getElementById('medico').value;
-	form.action = "php/medico.php;
-	form.submit();
+function GuardarCambiosInforme(){
+	var form = document.getElementById('formulario_informe');
+	var parametros = "id="+form.cita.value+"&informe="+form.informe_medico.value;
+	divResultado = document.getElementById('informe');
+	datos = "guardar_informe.php";
+	envio_ajax(datos,divResultado,parametros);
 }
 
-function insertar_informe(){
-	
-	var param1 = document.getElementById('paciente').value;
- 	var param2 = document.getElementById('citas').value;
-	var param3 = document.getElementById('medicos').value;
-	var param4 = document.getElementById('informe').value;
-	
-	divResultado = document.getElementById('resultado');
-	ajax=Ajax();
-	ajax.open("GET", "registro_informe.php?paciente="+param1+"&cita="+param2+"&medico="+param3+"$informe="+param4,true);
-	ajax.onreadystatechange=function() {
-		if (ajax.readyState==4) {
-				divResultado.innerHTML = ajax.responseText
-		}
-	}
-	ajax.send(null);
-}
-
-
-function funcionloca()
-{
-alert("locaaaaaaaaa");
+function GuardarModificacionCita(){
+	var form = document.getElementById('formulario_modificar_cita');
+	var parametros = "cita="+form.id.value+"&paciente="+form.paciente.value+"&medico_id="+form.medico.options[form.medico.selectedIndex].value+"&tipo_paciente="+form.tipo_paciente.options[form.tipo_paciente.selectedIndex].value+"&frecuentacion_inst="+form.frecuentacion_institucion.options[form.frecuentacion_institucion.selectedIndex].value+"&frecuentacion_serv="+form.frecuentacion_servicio.options[form.frecuentacion_servicio.selectedIndex].value+"&tipo_atencion="+form.tipo_atencion.options[form.tipo_atencion.selectedIndex].value+"&atencion_por="+form.atencion_por.options[form.atencion_por.selectedIndex].value+"&area_referencia="+form.area_referencia.options[form.area_referencia.selectedIndex].value+"&fecha="+form.fecha.value+"&turno="+form.turno.options[form.turno.selectedIndex].value;
+	divResultado = document.getElementById('ModificarCita');
+	datos = "guardar_modificacion.php";
+	envio_ajax(datos,divResultado,parametros);
 }

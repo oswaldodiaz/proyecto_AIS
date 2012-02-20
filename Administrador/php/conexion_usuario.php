@@ -1,7 +1,7 @@
 <?
 $hostname= "localhost";
 	$user="root";
-	$password="verveoasis";
+	$password="";
 	
 	//connect
 	$db_link=mysql_connect($hostname,$user,$password);

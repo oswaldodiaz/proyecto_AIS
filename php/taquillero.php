@@ -1,7 +1,5 @@
 <?php
 require_once('calendar/classes/tc_calendar.php');
-?>
-<?php
 session_start();
 header("Cache-control: private");
 if ($_SESSION['estado']  == "Conectado"){
@@ -69,6 +67,33 @@ if (mysql_num_rows($query)!= 0)
 		$(function() {
 			$( "#tabs" ).tabs();
 		});
+		
+		function holamundo(){
+			alert("hola mundo");
+		}
+		
+		function ActualizarHistorial(){
+			var form = document.getElementById('formulario_registro_cita');
+			var parametros = "id="+form.id.value;
+			divResultado = document.getElementById('historial_citas');
+			datos = "actualizacion_historial.php";
+			var ajax=false;
+			try	{   ajax = new ActiveXObject("Msxml2.XMLHTTP");
+			} catch (e) {
+					try {   ajax = new ActiveXObject("Microsoft.XMLHTTP");
+					} catch (E) {    ajax = false;
+					}
+			}
+			if (!ajax && typeof XMLHttpRequest!='undefined') {    ajax = new XMLHttpRequest();   }
+			ajax.open("POST", datos,true);
+			ajax.onreadystatechange=function() {
+				if (ajax.readyState==4) {
+						divResultado.innerHTML = ajax.responseText
+				}
+			}
+			ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+			ajax.send(parametros);
+		}
 		</script>
 	</head>
 	
@@ -86,7 +111,8 @@ if (mysql_num_rows($query)!= 0)
 					<ul>
 						<li><a href="#tabs-1">Registro de Paciente</a></li>
 						<li><a href="#tabs-2">Registro de Cita</a></li>
-						<li><a href="#tabs-3">Historial de Paciente</a></li>
+						<li><a href="#tabs-3" onClick="(ActualizarHistorial())">Historial de Paciente</a></li>
+						
 					</ul>
 
 					<div id="tabs-1" align = "center">
@@ -94,7 +120,7 @@ if (mysql_num_rows($query)!= 0)
 							<p><?php echo $mensaje_inicial;?></p>
 						</div>
 
-						<form id = "formulario_registro_paciente" onsubmit = "GuardarCambiosPaciente();return false;" action = "" method = "POST">
+						<form id = "formulario_registro_paciente" onsubmit = "GuardarCambiosPaciente();return false;" action = "#tabs-2" method = "POST">
 							<table>
 								<tr>
 				  					<td><font color = "#000000">ID:</font></td>
@@ -144,7 +170,7 @@ if (mysql_num_rows($query)!= 0)
 											$myCalendar->setDate(date($fecha[2]), date($fecha[1]), date($fecha[0]));
 											$myCalendar->setPath("calendar/");
 											$myCalendar->setYearInterval(1900, 2012);
-											$myCalendar->dateAllow('1900-01-01', '2012-02-15');
+											$myCalendar->dateAllow('1900-01-01', '2012-02-22');
 											$myCalendar->setDateFormat('j F Y');
 											$myCalendar->setAlignment('left', 'bottom');
 											$myCalendar->writeScript();
@@ -203,7 +229,7 @@ if (mysql_num_rows($query)!= 0)
 					<div id="tabs-2" align = "center">
 						<p>Registrar Cita</p>
 
-						<form id = "formulario_registro_cita" onsubmit = "GuardarCambiosCita();ActualizarHistorial();return false;" action = "" method = "POST">
+						<form id = "formulario_registro_cita" onsubmit = "GuardarCambiosCita();return false;" action = "" method = "POST">
 							<table>
 								<tr>
 				  					<td><font color = "#000000">Cedula del paciente:</font></td>
@@ -244,24 +270,24 @@ if (mysql_num_rows($query)!= 0)
 								<tr>
 									<td><font color = "#000000">Frecuentacion en la Institucion:</font></td>
 				  					<td><select name="frecuentacion_institucion" style="width:150px" id = "frecuentacion_institucion">
-										<option value="De Primera Vez">De primera vez</option>
-										<option value="Nuevo en el anio">Nuevo en el anio</option>
-										<option value="Subsiguiente">Subsiguiente</option>
+										<option value="0">De primera vez</option>
+										<option value="1">Nuevo en el anio</option>
+										<option value="2">Subsiguiente</option>
 									</select></td>
 								</tr>
 								<tr>
 									<td><font color = "#000000">Frecuentacion en Servicio:</font></td>
 				  					<td><select name="frecuentacion_servicio" style="width:150px" id = "frecuentacion_servicio">
-										<option value="De primera vez">De primera vez</option>
-										<option value="Nuevo en el anio">Nuevo en el anio</option>
-										<option value="Subsiguiente">Subsiguiente</option>
+										<option value="0">De primera vez</option>
+										<option value="1">Nuevo en el anio</option>
+										<option value="2">Subsiguiente</option>
 									</select></td>
 								</tr>
 								<tr>
 									<td><font color = "#000000">Tipo de Atencion:</font></td>
 				  					<td><select name="tipo_atencion" style="width:150px" id = "tipo_atencion">
-										<option value="Nuevo">Nuevo</option>
-										<option value="Reconsulta">Reconsulta</option>
+										<option value="0">Nuevo</option>
+										<option value="1">Reconsulta</option>
 									</select></td>
 								</tr>
 								<tr>
@@ -284,7 +310,7 @@ if (mysql_num_rows($query)!= 0)
 						</form>  
 					</div>
 
-					<div id="tabs-3">
+					<div id="tabs-3" align = "center">
 						
 						<?php
 							$query_datos = mysql_query ("SELECT * FROM pacientes where id = '$id'", $db_link);
@@ -317,62 +343,7 @@ if (mysql_num_rows($query)!= 0)
 										</tr>
 									</table><br></br>";
 								
-									echo "<div id='historial_citas'>";
-										$query_hitoria = mysql_query ("SELECT * FROM cita where paciente_id = '$id' ORDER BY 'fecha'", $db_link);										
-										if (mysql_num_rows($query_hitoria)!= 0){
-										
-											echo "
-												<table>";
-													echo "<tr>
-														<td><p><font color = '#000000'>Cita</font></p></td>
-														<td><p><font color = '#000000'>Servicio</font></p></td>
-														<td><p><font color = '#000000'>Medico</font></p></td>
-														<td><p><font color = '#000000'>Tipo de paciente</font></p></td>
-														<td><p><font color = '#000000'>Frecuentacion en la institucion</font></p></td>
-														<td><p><font color = '#000000'>Frecuentacion de servicio</font></p></td>
-														<td><p><font color = '#000000'>Tipo de Atencion</font></p></td>
-														<td><p><font color = '#000000'>Atencion por</font></p></td>
-														<td><p><font color = '#000000'>Area de Referencia </font></p></td>
-														<td><p><font color = '#000000'>Fecha</font></p></td>
-														<td><p><font color = '#000000'>Turno</font></p></td>
-														<td><p><font color = '#000000'>Modificar</font></p></td>
-													</tr>";
-													
-													while ($fila = mysql_fetch_array ($query_hitoria)){
-														$medico = $fila['medico_id'];
-														$array = array("0",$medico);
-														$medico = implode("",$array);
-														$query_servicio = mysql_query ("SELECT nombre_servicio FROM servicios where codigo_servicio IN (SELECT servicio_id FROM usuarios WHERE id = '$medico')", $db_link);
-														$servicio = mysql_fetch_array ($query_servicio);
-														
-														$query_medico = mysql_query ("SELECT * FROM usuarios WHERE id = '$medico'",$db_link);
-														$medico_datos = mysql_fetch_array ($query_medico);
-														
-														if($fila['turno'] == "Mañana")
-															$fila['turno'] = "Ma&ntilde;ana";
-														
-														echo"
-														<tr>
-															<td><p><font color = '#000000'>" .$fila['id']. "</font></p></td>
-															<td><p><font color = '#000000'>" .$servicio['nombre_servicio']. "</font></p></td>
-															<td><p><font color = '#000000'>" .$medico_datos['nombre_completo']. " </font></p></td>
-															<td><p><font color = '#000000'>" .$fila['tipo_paciente']."  </font></p></td>
-															<td><p><font color = '#000000'>" .$fila['frecuentacion_inst']. " </font></p></td>
-															<td><p><font color = '#000000'>" .$fila['frecuentacion_serv']. "</font></p></td>
-															<td><p><font color = '#000000'>" .$fila['tipo_atencion']. " </font></p></td>
-															<td><p><font color = '#000000'>" .$fila['atencion_por']. "</font></p></td>
-															<td><p><font color = '#000000'>" .$fila['area_referencia']. "</font></p></td>
-															<td><p><font color = '#000000'>" .$fila['fecha']. "</font></p></td>
-															<td><p><font color = '#000000'>" .$fila['turno']. "</font></p></td>
-															<td><p><font color = '#000000'><a>Modificar</a></font></p></td>
-														</tr>";
-													}
-												echo "</table>";
-										
-										}else{
-											echo "No hay registro de citas";
-										}
-									echo "</div>";
+									echo "<div id='historial_citas'></div>";
 								echo "</div>";
 							}else{
 								echo "No se ha registrado";
