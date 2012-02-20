@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 20-02-2012 a las 20:02:36
+-- Tiempo de generación: 20-02-2012 a las 20:05:06
 -- Versión del servidor: 5.5.16
 -- Versión de PHP: 5.3.8
 
@@ -54,27 +54,6 @@ INSERT INTO `cita` (`id`, `paciente_id`, `medico_id`, `tipo_paciente`, `frecuent
 (205, 18539330, '02801012974', 'Asegurado', '0', '0', '0', 'Control', 'Consulta Externa', '2012-02-20', 'Mañana', NULL, 0),
 (206, 18539330, '05301013132', 'Asegurado', '0', '0', '0', 'Control', 'Consulta Externa', '2012-02-19', 'Mañana', 'Nada nuevo en la revision', 0),
 (207, 18539330, '01031011445', 'Asegurado', '0', '0', '0', 'Control', 'Consulta Externa', '2012-02-20', 'Mañana', NULL, 0);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `historia_medicas`
---
-
-CREATE TABLE IF NOT EXISTS `historia_medicas` (
-  `numero_expediente` int(11) NOT NULL AUTO_INCREMENT,
-  `informe` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `paciente_id` int(11) DEFAULT NULL,
-  `cita_id` int(11) NOT NULL,
-  PRIMARY KEY (`numero_expediente`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
-
---
--- Volcado de datos para la tabla `historia_medicas`
---
-
-INSERT INTO `historia_medicas` (`numero_expediente`, `informe`, `paciente_id`, `cita_id`) VALUES
-(2, '', 1, 3);
 
 -- --------------------------------------------------------
 
