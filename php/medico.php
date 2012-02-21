@@ -11,15 +11,15 @@
 
 	function dameDiaLetra($diaNumero){
 		switch($diaNumero){
-			case "Sunday":	return("Domingo");		break;
-			case "Monday": return("Lunes");			break;
-			case "Tuesday": return("Martes");		break;
-			case "Wednesday": return("Miercoles");	break;
-			case "Thursday": return("Jueves");		break;
-			case "Friday": return("Viernes");		break;
-			case "Saturday": return("Sabado");		break;
+			case "Sunday":	return("domingo");		break;
+			case "Monday": return("lunes");		break;
+			case "Tuesday": return("martes");		break;
+			case "Wednesday": return("miercoles");		break;
+			case "Thursday": return("jueves");		break;
+			case "Friday": return("viernes");		break;
+			case "Saturday": return("sabado");		break;
 			default:	return("Nada");				break;
-		}
+		} 
 	}
 
 	function dameDiaMayus($diaNumero){
@@ -94,8 +94,8 @@
 							$fecha = date("Y-m-d");
 							$fecha_array = explode("-",$fecha);
 							
-							if($dia = dameDiaLetra(strftime('%A',strtotime($fecha))) == "Nada")
-								$dia = dameDiaMayus(strftime('%A',strtotime($fecha)));
+							if($dia = dameDiaLetra(strftime('%A',strtotime(date($fecha)))) == "Nada")
+								$dia = strftime('%A',strtotime(date($fecha)));
 							echo "<p>
 									<font color = '#000000'>
 										" .$dia. ", " .$fecha_array[2]. " de " .dameMes($fecha_array[1]). " de " .$fecha_array[0]. "

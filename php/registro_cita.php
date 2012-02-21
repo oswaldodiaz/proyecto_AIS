@@ -4,8 +4,7 @@
 	date_default_timezone_set('America/Caracas');
 
 	function dameDiaLetra($diaNumero){
-	echo $diaNumero;
-	/*	switch($diaNumero){
+		switch($diaNumero){
 			case "Sunday":	return("domingo");		break;
 			case "Monday": return("lunes");		break;
 			case "Tuesday": return("martes");		break;
@@ -13,7 +12,8 @@
 			case "Thursday": return("jueves");		break;
 			case "Friday": return("viernes");		break;
 			case "Saturday": return("sabado");		break;
-		} */
+			default:	return("Nada");				break;
+		} 
 	}	
 	
 	$today = date("Y-m-d");
@@ -92,7 +92,8 @@
 				$cant = mysql_num_rows($query_fecha);
 				
 				//$max va a almacenar la cantidad maxima de citas para el dia 
-				$dia_semana = strftime('%A',strtotime(date($fecha_aux)));
+				if($dia_semana = dameDiaLetra(strftime('%A',strtotime(date($fecha_aux)))) == "Nada")
+					$dia_semana = strftime('%A',strtotime(date($fecha_aux)));
 				$max = $array[$dia_semana];
 				
 				if($cant < $max){//Existe disponibilidad para este dia
