@@ -3,5 +3,5 @@
 	include ('conexion.php');
 	
 	$query = mysql_query ("UPDATE cita SET informe_medico = '{$_POST['informe']}' where id = '{$_POST['id']}'", $db_link);
-		echo "Actualizacion exitosa!";	
+		echo "Informe actualizado!";	
 ?>

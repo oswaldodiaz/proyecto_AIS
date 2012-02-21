@@ -4,7 +4,8 @@
 	date_default_timezone_set('America/Caracas');
 
 	function dameDiaLetra($diaNumero){
-		switch($diaNumero){
+	echo $diaNumero;
+	/*	switch($diaNumero){
 			case "Sunday":	return("domingo");		break;
 			case "Monday": return("lunes");		break;
 			case "Tuesday": return("martes");		break;
@@ -12,7 +13,7 @@
 			case "Thursday": return("jueves");		break;
 			case "Friday": return("viernes");		break;
 			case "Saturday": return("sabado");		break;
-		}
+		} */
 	}	
 	
 	$today = date("Y-m-d");
@@ -91,7 +92,7 @@
 				$cant = mysql_num_rows($query_fecha);
 				
 				//$max va a almacenar la cantidad maxima de citas para el dia 
-				$dia_semana = dameDiaLetra(strftime('%A',strtotime($fecha_aux)));
+				$dia_semana = strftime('%A',strtotime(date($fecha_aux)));
 				$max = $array[$dia_semana];
 				
 				if($cant < $max){//Existe disponibilidad para este dia
@@ -104,9 +105,10 @@
 				$date = new DateTime($fecha_aux);
 				$date->modify('+1 day');
 				$fecha_aux = $date->format('Y-m-d');
-			}
+				
+			} 
 			//echo(dameDiaLetra(strftime('%A',strtotime($fecha_aux))));
-			$query = mysql_query ("INSERT INTO cita 
+		$query = mysql_query ("INSERT INTO cita 
 									(paciente_id, medico_id, atencion_por, tipo_paciente, frecuentacion_inst, frecuentacion_serv, tipo_atencion, area_referencia, fecha, turno)
 									VALUES 
 									('{$_POST['id']}', '$codigo_medico','{$_POST['atencion_por']}','{$_POST['tipo_paciente']}','{$_POST['frecuentacion_institucion']}','{$_POST['frecuentacion_servicio']}','{$_POST['tipo_atencion']}','{$_POST['area_referencia']}','$fecha','$turno')", $db_link);

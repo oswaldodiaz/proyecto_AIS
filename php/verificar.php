@@ -20,12 +20,21 @@
 		if ($_SESSION['rol'] == "Taquillero"){
 			echo "<form align='center' id = 'formulario_verificar' onsubmit = 'validarCedula();return false;' action = '' method = 'POST'>
 				<strong>CEDULA DEL PACIENTE: </strong><input type='text' name = 'cedula' id = 'cedula'/>
+				<input type='hidden' name='taquillero' id='taquillero' value='$id'>
 				<INPUT TYPE='submit' value='Ingresar'/>
 				</form>";
 		}else{
 			if ($_SESSION['rol'] == "Medico"){
 				echo "
 				<form id = 'formulario_ver_citas_dia' onsubmit = '' action = 'php/medico.php' method = 'POST'>
+				<input type='submit' value = 'Ver Citas Del Dia'/>
+				<input type = 'hidden' id = 'id' name = 'id' value = '$id'/>
+				</form>";
+			}
+			else
+			{
+				echo "
+				<form id = 'formulario_secretaria' onsubmit = '' action = 'php/secretaria.php' method = 'POST'>
 				<input type='submit' value = 'Ver Citas Del Dia'/>
 				<input type = 'hidden' id = 'id' name = 'id' value = '$id'/>
 				</form>";

@@ -85,7 +85,7 @@ $id = $_POST['id'];
 											if($fila['informe_medico'] != NULL)
 												echo "<td><textarea name='informe_medico' cols='50' rows='5' id = 'informe_medico' style='width:150px'>".$fila['informe_medico']."</textarea>";
 											else
-												echo "<td><input type = 'textarea' value = '' name = 'informe_medico' id = 'informe_medico' style='width:150px'/></td>";
+												echo "<td><textarea name='informe_medico' cols='50' rows='5' id = 'informe_medico' style='width:150px'></textarea>";
 										echo "</tr>
 									</table>
 									<input type = 'hidden' id = 'cita' name = 'cita' value = " .$fila['id']. " >

@@ -121,7 +121,6 @@ function GuardarCambiosPaciente(){
 }
 
 function GuardarCambiosCita(){
-
 	if(!ValidarFormularioPaciente(document.getElementById('formulario_registro_paciente'))){	alert("Complete los datos del paciente primero"); return false;}
 	var form = document.getElementById('formulario_registro_cita');
 	var parametros = "id="+form.id.value+"&atencion_por="+form.atencion_por.options[form.atencion_por.selectedIndex].value+"&servicios="+form.servicios.options[form.servicios.selectedIndex].value+"&tipo_paciente="+form.tipo_paciente.options[form.tipo_paciente.selectedIndex].value+"&frecuentacion_institucion="+form.frecuentacion_institucion.options[form.frecuentacion_institucion.selectedIndex].value+"&frecuentacion_servicio="+form.frecuentacion_servicio.options[form.frecuentacion_servicio.selectedIndex].value+"&tipo_atencion="+form.tipo_atencion.options[form.tipo_atencion.selectedIndex].value+"&area_referencia="+form.area_referencia.options[form.area_referencia.selectedIndex].value;

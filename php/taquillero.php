@@ -8,6 +8,8 @@ if ($_SESSION['estado']  == "Conectado"){
 include ('conexion.php');
 	
 $id = $_POST['cedula'];
+$taquillero = $_POST['taquillero'];
+
 $numero_historia = ""; $nombre_completo = ""; $primer_apellido = ""; $segundo_apellido = ""; $nombre_padre = ""; $nombre_madre = ""; $sexo = ""; $telefono = ""; $fecha_nacimiento = ""; $fecha[2] = "01"; $fecha[1] = "01"; $fecha[0] = "2000" ;$lugar_nacimiento = ""; $seguro_social = ""; $provincia = ""; $distrito = ""; $corregimiento = ""; $direccion = ""; $nombre_urgencias = ""; $parentesco_urgencias = ""; $telefono_urgencias = "";
 $query = mysql_query ("SELECT * FROM pacientes where id = '$id'", $db_link);
 
@@ -74,7 +76,7 @@ if (mysql_num_rows($query)!= 0)
 		
 		function ActualizarHistorial(){
 			var form = document.getElementById('formulario_registro_cita');
-			var parametros = "id="+form.id.value;
+			var parametros = "id="+form.id.value+"&taquillero="+form.taquillero.value;
 			divResultado = document.getElementById('historial_citas');
 			datos = "actualizacion_historial.php";
 			var ajax=false;
@@ -305,6 +307,7 @@ if (mysql_num_rows($query)!= 0)
 								</tr>
 							</table>
 
+							<input type='hidden' name='taquillero' id='taquillero' value='$taquillero'>
 							<input type = "submit" value="Guardar Cita"/>
 							<div id = "resultadoCita"></div>
 						</form>  

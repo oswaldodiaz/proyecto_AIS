@@ -8,6 +8,10 @@
 	}
 	include ('conexion.php');
 	$id = $_POST['id'];
+	$query_servicio = mysql_query ("SELECT * FROM usuarios WHERE id = '$id'",$db_link);
+	$resultado = mysql_fetch_array($query_servicio);
+	$servicio = $resultado['servicio_id'];
+
 
 	function dameDiaLetra($diaNumero){
 		switch($diaNumero){
@@ -51,6 +55,7 @@
 			case "12": 	return("Diciembre");	break;
 		}
 	}
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -78,6 +83,26 @@
 		$(function() {
 			$( "#tabs" ).tabs();
 		});
+
+		function funcion_hora_llegada(boton){
+			var currentTime = new Date()
+			var hours = currentTime.getHours()
+			var minutes = currentTime.getMinutes()
+			if (minutes < 10){
+				minutes = "0" + minutes
+			}
+			
+			if(hours > 11){
+				boton.value = hours + ":" + minutes + " PM";
+			} else {
+				boton.value = hours + ":" + minutes + " AM";
+			}
+			boton.disabled = true;
+
+		}
+		function cambiarCheck(check){
+			check.disabled = true;
+		}
 		</script>
 	</head>
 	
@@ -101,26 +126,31 @@
 										" .$dia. ", " .$fecha_array[2]. " de " .dameMes($fecha_array[1]). " de " .$fecha_array[0]. "
 									</font>
 								</p>";
-							
-							$query2 = mysql_query ("SELECT * FROM cita where medico_id = '$id' AND fecha='$fecha'", $db_link);
-							
+
+							$query2 = mysql_query ("SELECT * FROM cita where fecha='$fecha' AND medico_id IN (SELECT id FROM usuarios WHERE servicio_id = '$servicio') ORDER BY medico_id", $db_link);
+
 							if (mysql_num_rows($query2)!= 0){
 								echo "
 								<table>";
 									echo "<tr>
+										<td align='center'><font color = '#000000'><p>M&eacute;dico</p></font></td>
 										<td align='center'><font color = '#000000'><p>C&eacute;dula, Nombre, Edad, Sexo</p></font></td>
 										<td align='center'><p><font color = '#000000'>Tipo de paciente</font></p></td>
 										<td align='center'><font color = '#000000'><p>Residencia: Prov/Dist/Corrg</p></font></td>
-										<td align='center'><p><font color = '#000000'><p>Frec. Inst.</font></p></td>
+										<td align='center'><p><font color = '#000000'>Frec. Inst.</font></p></td>
 										<td align='center'><p><font color = '#000000'>Frec. Serv.</font></p></td>
 										<td align='center'><p><font color = '#000000'>Tipo de Atencion</font></p></td>
 										<td align='center'><p><font color = '#000000'>Atencion por</font></p></td>
 										<td align='center'><p><font color = '#000000'>Area de Referencia</font></p></td>
-										<td align='center'><p><font color = '#000000'>Historia</font></p></td>
-										<td align='center'><p><font color = '#000000'>Informe</font></p></td>
+										<td align='center'><p><font color = '#000000'>Hora de Llegada</font></p></td>
+										<td align='center'><p><font color = '#000000'>Atendido</font></p></td>
 									</tr>";
 									while ($fila = mysql_fetch_array ($query2)){
-									
+										$medico = $fila['medico_id'];
+										$query_medico = mysql_query ("SELECT * FROM usuarios WHERE id = '$medico'",$db_link);
+										$query_medico_resultado = mysql_fetch_array($query_medico);
+										$nombre = $query_medico_resultado['nombre_completo'];
+
 										$cita_id = $fila['id'];
 										$paciente_id = $fila['paciente_id'];
 										$query_paciente = mysql_query("SELECT * FROM pacientes WHERE id = '$paciente_id'",$db_link);
@@ -135,6 +165,7 @@
 										
 										echo"
 										<tr>
+											<td align='center'><font color = '#000000'><p>" .$nombre."</p></font></td>
 											<td align='center'><p><font color = '#000000'>
 											".$paciente_row['id']. ", "
 											.$paciente_row['nombre_completo']. " ".$paciente_row['primer_apellido']." ".$paciente_row['segundo_apellido'].", "
@@ -146,23 +177,14 @@
 											<td align='center'><p><font color = '#000000'>  " .$fila['tipo_atencion']. " </font></p></td>
 											<td align='center'><p><font color = '#000000'>  " .$fila['atencion_por']. "</font></p></td>
 											<td align='center'><p><font color = '#000000'> " .$fila['area_referencia']. "</font></p></td>
-											<td align='center'>
-												<form  action = 'historia.php' method = 'POST'>
-												<input type = 'hidden' id = 'id' name = 'id' value = '$paciente_id'/>
-												<input type = 'hidden' id = 'medico' name = 'medico' value = '$id'/>
-												<INPUT TYPE='submit' value='Ver Historia'/></form>
-											</td>
-											<td align='center'>
-												<form  action = 'informe.php' method = 'POST'>
-												<input type = 'hidden' id = 'id' name = 'id' value = '$cita_id'>
-												<INPUT TYPE='submit' value='Informe'/></form>
-											</td>
+											<td align='center'><input type = 'button' id = 'secretaria_boton' name = 'secretaria_boton' value = 'Registrar Llegada' onclick ='funcion_hora_llegada(this);return false;'/></td>
+											<td align='center'><input type='checkbox' name='option' value='' onclick = 'cambiarCheck(this);'><br></td>
 										</tr>";
 									}
 								echo "</table>";
 								
 							}else{
-								echo "No hay citas para este día";
+								echo "No hay citas para este dÃ­a";
 							}
 						?>
 					</div>

@@ -3,6 +3,7 @@
 	include ('conexion.php');
 	
 	$id = $_POST['id'];
+	$taquillero = $_POST['taquillero'];
 	
 	$query_hitoria = mysql_query ("SELECT * FROM cita where paciente_id = '$id' ORDER BY 'fecha'", $db_link);										
 	if (mysql_num_rows($query_hitoria)!= 0){
@@ -51,6 +52,7 @@
 					<td align='center'>
 						<form  action = 'modificarCita.php' method = 'POST'>
 						<input type = 'hidden' id = 'id' name = 'id' value = ".$fila['id'].">
+						<input type = 'hidden' id = 'taquillero' name = 'taquillero' value = '$taquillero'>
 						<INPUT TYPE='submit' value='Modificar'/></form>
 					</td>
 				</tr>";

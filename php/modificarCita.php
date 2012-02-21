@@ -8,6 +8,7 @@ if ($_SESSION['estado']  == "Conectado"){
 }
 include ('conexion.php');
 $id = $_POST['id'];
+$taquillero = $_POST['taquillero'];
 
 
 $paciente_id = ""; $medico_id = ""; $tipo_paciente = ""; $frecuentacion_inst = ""; $frecuentacion_serv = ""; $tipo_atencion = ""; $atencion_por = ""; $area_referencia = ""; $fecha = ""; $turno = ""; $codigo = "";
@@ -375,10 +376,13 @@ if (mysql_num_rows($query)!= 0)
 							<input type = "submit" value="Guardar Modificaci&oacute;n"/>
 							<div id = "ModificarCita"></div>
 						</form>
-						<form id = 'volverModificacion' onsubmit = '' action = 'medico.php' method = 'POST'>
-							<input type = 'hidden' id = 'id' name = 'id' value = '$medico_id'>
-							<input type = 'submit' value='Volver'/>
-						</form>
+						<?php
+							echo "<form id = 'volverModificacion' onsubmit = '' action = 'taquillero.php' method = 'POST'>
+								<input type = 'hidden' id = 'taquillero' name = 'taquillero' value = '$taquillero'>
+								<input type = 'hidden' id = 'cedula' name = 'cedula' value = '$paciente_id'>
+								<input type = 'submit' value='Volver'/>
+							</form>";
+						?>
 					</div>
 				</div>
 			</div>
