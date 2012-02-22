@@ -45,6 +45,14 @@ function validar_string(string){
     return true
 }
 
+function id_especial(max){
+	var form = document.getElementById('formulario_verificar');
+	form.cedula.value = max;
+	form.action = "php/taquillero.php";
+	form.submit();
+}
+
+
 function validarCedula(){
 	var form = document.getElementById('formulario_verificar');
 	if(validar_entero(form.cedula)){

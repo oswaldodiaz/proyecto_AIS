@@ -1,0 +1,29 @@
+partes a agregar
+
+sesion.js
+
+function id_especial(max){
+	var form = document.getElementById('formulario_verificar');
+	form.cedula.value = max;
+	form.action = "php/taquillero.php";
+	form.submit();
+}
+
+verificar.php
+
+if ($_SESSION['rol'] == "Taquillero"){
+			$query = mysql_query("SELECT MAX(id) FROM pacientes", $db_link);
+			$max = 900000001;
+			if(mysql_num_rows($query) != 0)
+			{
+				$r = mysql_fetch_array($query);
+				$max = $r['MAX(id)'];
+				$max++;
+				if($max < 900000001)	$max = 900000001;
+			}
+			echo "<form align='center' id = 'formulario_verificar' onsubmit = 'validarCedula();return false;' action = '' method = 'POST'>
+				<strong>CEDULA DEL PACIENTE: </strong><input type='text' name = 'cedula' id = 'cedula'/>
+				<input type='hidden' name='taquillero' id='taquillero' value='$id'>
+				<INPUT TYPE='submit' value='Ingresar'/>
+				<INPUT TYPE='button' onclick='id_especial(".$max.");return false;' value='ID Especial'/>
+				</form>";

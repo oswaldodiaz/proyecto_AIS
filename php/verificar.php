@@ -18,10 +18,20 @@
 		echo "<font face='arial' size='3'>Bienvenido " .$nombre[0]."<a style='margin-left: 2em' href='index.php'>Cerrar Sesi&oacute;n</a></font>";
 
 		if ($_SESSION['rol'] == "Taquillero"){
+			$query = mysql_query("SELECT MAX(id) FROM pacientes", $db_link);
+			$max = 900000001;
+			if(mysql_num_rows($query) != 0)
+			{
+				$r = mysql_fetch_array($query);
+				$max = $r['MAX(id)'];
+				$max++;
+				if($max < 900000001)	$max = 900000001;
+			}
 			echo "<form align='center' id = 'formulario_verificar' onsubmit = 'validarCedula();return false;' action = '' method = 'POST'>
 				<strong>CEDULA DEL PACIENTE: </strong><input type='text' name = 'cedula' id = 'cedula'/>
 				<input type='hidden' name='taquillero' id='taquillero' value='$id'>
 				<INPUT TYPE='submit' value='Ingresar'/>
+				<INPUT TYPE='button' onclick='id_especial(".$max.");return false;' value='ID Especial'/>
 				</form>";
 		}else{
 			if ($_SESSION['rol'] == "Medico"){
